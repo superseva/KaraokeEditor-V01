@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEditor-V01", "Assembly-CSharp.csproj", "{CA34998D-8D2B-FCF4-1993-2E1C5FE1925B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEditor-V01", "Assembly-CSharp-firstpass.csproj", "{69316C26-9155-6F09-5783-611D0A335D15}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA34998D-8D2B-FCF4-1993-2E1C5FE1925B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA34998D-8D2B-FCF4-1993-2E1C5FE1925B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA34998D-8D2B-FCF4-1993-2E1C5FE1925B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA34998D-8D2B-FCF4-1993-2E1C5FE1925B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69316C26-9155-6F09-5783-611D0A335D15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69316C26-9155-6F09-5783-611D0A335D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69316C26-9155-6F09-5783-611D0A335D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69316C26-9155-6F09-5783-611D0A335D15}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
