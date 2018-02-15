@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEditor V01", "KaraokeEditor V01.csproj", "{CFF8275C-31C0-EFC4-F9D7-729433B12689}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaraokeEditor V01.Plugins", "KaraokeEditor V01.Plugins.csproj", "{D832B6A3-0F9C-6164-64B7-6F018BE18F58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFF8275C-31C0-EFC4-F9D7-729433B12689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFF8275C-31C0-EFC4-F9D7-729433B12689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFF8275C-31C0-EFC4-F9D7-729433B12689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFF8275C-31C0-EFC4-F9D7-729433B12689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D832B6A3-0F9C-6164-64B7-6F018BE18F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D832B6A3-0F9C-6164-64B7-6F018BE18F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D832B6A3-0F9C-6164-64B7-6F018BE18F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D832B6A3-0F9C-6164-64B7-6F018BE18F58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
