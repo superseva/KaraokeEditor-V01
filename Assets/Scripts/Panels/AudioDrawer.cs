@@ -4,6 +4,41 @@ using UnityEngine;
 
 public class AudioDrawer : MonoBehaviour {
 
+
+    public static Texture2D CreateAudioTexturePiece(AudioClip aud, int width, int height, Color color, int startSample, int endSample)
+    {
+        int numOfsamples = endSample - startSample;
+        int step = Mathf.CeilToInt((numOfsamples * aud.channels) / width);
+        float[] samples = new float[numOfsamples * aud.channels];
+        // fill array of samples
+        aud.GetData(samples, startSample);
+
+        Texture2D img = new Texture2D(width, height, TextureFormat.RGBA32, false);
+
+        Color[] xy = new Color[width * height];
+        for (int x = 0; x < width * height; x++)
+        {
+            xy[x] = new Color(0, 0, 0, 0);
+        }
+
+        img.SetPixels(xy);
+
+        int i = 0;
+        while (i < width)
+        {
+            int barHeight = Mathf.CeilToInt(Mathf.Clamp(Mathf.Abs(samples[i * step]) * height, 0, height));
+            int add = samples[i * step] > 0 ? 1 : -1;
+            for (int j = 0; j < barHeight; j++)
+            {
+                img.SetPixel(i, Mathf.FloorToInt(height / 2) - (Mathf.FloorToInt(barHeight / 2) * add) + (j * add), color);
+            }
+            ++i;
+        }
+
+        img.Apply();
+        return img;
+    }
+
     public static Texture2D CreateAudioTexture(AudioClip aud, int width, int height, Color color)
     {
 

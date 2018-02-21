@@ -8,6 +8,7 @@ public class PanelCtrl : MonoBehaviour {
 
     //public GameObject[] panels;
     public List<GameObject> panels;
+    public GameObject helpPanel;
 
     void Start ()
     {
@@ -33,6 +34,11 @@ public class PanelCtrl : MonoBehaviour {
                     go.SetActive(true);
             }
         }
+    }
+
+    public void OpenHelp()
+    {
+        helpPanel.SetActive(!helpPanel.activeSelf);
     }
 
     public void QuitApp()

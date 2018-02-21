@@ -171,17 +171,17 @@ public class TrackPanelCtrl : MonoBehaviour {
         Debug.Log("onePixelToSeconds " + onePixelToSeconds);
 
         //populate words
-        float pozX;
-        int numOfwords = songDataFromJson.words.Length;
-        for(int i = 0; i< numOfwords; i++)
-        {
-            pozX = float.Parse(songDataFromJson.timestamps[i]) / onePixelToSeconds;
-            Debug.Log(pozX);
-            Instantiate(wordPrefab, wordsHolder.transform, false);
-            wordPrefab.text = songDataFromJson.words[i].ToString();
+        //float pozX;
+        //int numOfwords = songDataFromJson.words.Length;
+        //for(int i = 0; i< numOfwords; i++)
+        //{
+        //    pozX = float.Parse(songDataFromJson.timestamps[i]) / onePixelToSeconds;
+        //    Debug.Log(pozX);
+        //    Instantiate(wordPrefab, wordsHolder.transform, false);
+        //    wordPrefab.text = songDataFromJson.words[i].ToString();
             
-            wordPrefab.rectTransform.anchoredPosition= new Vector3(pozX, 0, 0);
-        }
+        //    wordPrefab.rectTransform.anchoredPosition= new Vector3(pozX, 0, 0);
+        //}
 
 
         beatCounter.StartCountingBeats();

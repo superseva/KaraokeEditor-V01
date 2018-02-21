@@ -9,6 +9,7 @@ public class SongData
     public string songname;
     public int bpm;
     public string artist;
-    public string[] words;
-    public string[] timestamps;
+    public WordData[] wordsList;
+    //public string[] words;
+    //public string[] timestamps;
 }

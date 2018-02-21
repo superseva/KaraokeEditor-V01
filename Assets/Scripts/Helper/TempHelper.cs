@@ -24,25 +24,7 @@ public class TempHelper : MonoBehaviour {
         song.songname = "myMysic";
         song.bpm = 118;
 
-        song.words = allWordsStr.Split(',');
-
-        string[] timesstr = allTimesStr.Split(',');
-        song.timestamps = new string[timesstr.Length];
-
-        Debug.Log(song.words.Length);
-        Debug.Log(timesstr.Length);
-
-
-
-        for(int i = 0;i< timesstr.Length; i++)
-        {
-            song.timestamps[i] = formatTimeToSeconds(timesstr[i]);
-        }
-
-        Debug.Log(song.timestamps.Length);
-
-        string jsonToSave = JsonMapper.ToJson(song);
-        jsonOutputTxt.text = jsonToSave;
+        
 
 
 

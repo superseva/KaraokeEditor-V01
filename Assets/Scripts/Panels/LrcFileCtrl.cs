@@ -16,8 +16,11 @@ public class LrcFileCtrl : MonoBehaviour {
     public static string TIMESTAMPS = "timestamps";
 
     string lyricsString;
-    string[] songWords = new string[] { };
-    string[] songTimestamps;
+    //string[] songWords = new string[] { };
+    //string[] songTimestamps;
+    MatchCollection matchWords;
+    MatchCollection matchTimestamps;
+    WordData[] wordsList;
 
     //UI Parts
     public Text lyricsPathTxt;
@@ -91,11 +94,11 @@ public class LrcFileCtrl : MonoBehaviour {
 
         // pull out all the timestamps from mm:ss.ss
         string patternTimestamps = @"\d\:\d{1,2}.\d{1,2}";
-        MatchCollection matchTimestamps = Regex.Matches(strClean, patternTimestamps);
+        matchTimestamps = Regex.Matches(strClean, patternTimestamps);
 
         // pull the words between ] and [
         string patternWords = @"\](.*?)\[";
-        MatchCollection matchWords = Regex.Matches(strClean, patternWords);
+        matchWords = Regex.Matches(strClean, patternWords);
 
         if (matchWords.Count != matchTimestamps.Count)
         {
@@ -105,19 +108,31 @@ public class LrcFileCtrl : MonoBehaviour {
 
         //Debug.Log("All is OK... proceed");
 
-        songWords = new string[matchWords.Count];
+        //songWords = new string[matchWords.Count];
         int i = 0;
         int w = matchWords.Count;
-        for (i = 0; i < w; i++)
-        {
-            songWords[i] = matchWords[i].ToString().TrimStart(']', ' ').TrimEnd('[');
-        }
+       // for (i = 0; i < w; i++)
+        //{
+            //songWords[i] = matchWords[i].ToString().TrimStart(']', ' ').TrimEnd('[');
+       // }
 
-        songTimestamps = new string[matchTimestamps.Count];
-        int n = matchTimestamps.Count;
-        for (i = 0; i < n; i++)
+        //songTimestamps = new string[matchTimestamps.Count];
+       // int n = matchTimestamps.Count;
+        //for (i = 0; i < n; i++)
+        //{
+            //songTimestamps[i] = formatTimeToSeconds(matchTimestamps[i].ToString());
+        //}
+
+        WordData word;
+        wordsList = new WordData[matchWords.Count];
+        for(i=0; i<w; i++)
         {
-            songTimestamps[i] = formatTimeToSeconds(matchTimestamps[i].ToString());
+            word = new WordData();
+            word.text = matchWords[i].ToString().TrimStart(']', ' ').TrimEnd('[');
+            word.time = formatTimeToSeconds(matchTimestamps[i].ToString());
+            word.index = i;
+            wordsList[i] = word;
+
         }
 
         //// Proceed to Save
@@ -133,7 +148,7 @@ public class LrcFileCtrl : MonoBehaviour {
     // SAVING PART
     public void SaveToJson()
     {
-        if(songWords.Length<1 || songTimestamps.Length<1)
+        if(matchWords.Count < 1 || matchTimestamps.Count< 1)
         {
             UIEventManager.FireAlert("Please merge lyrics with text first", "NO LYRICS OR TIMESTAMPS");
             return;
@@ -149,8 +164,9 @@ public class LrcFileCtrl : MonoBehaviour {
         song.bpm = int.Parse(songBPMTxt.text);
         song.artist = songArtist.text;
 
-        song.words = songWords;
-        song.timestamps = songTimestamps;
+        //song.words = songWords;
+        //song.timestamps = songTimestamps;
+        song.wordsList = wordsList;
 
         string jsonToSave = JsonMapper.ToJson(song);
         jsonOutputTxt.text = jsonToSave;

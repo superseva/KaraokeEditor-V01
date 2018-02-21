@@ -6,6 +6,7 @@ public class CloseButtonCtrl : MonoBehaviour {
 
 	public void CloseMe()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
     }
 }
