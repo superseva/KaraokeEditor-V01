@@ -17,6 +17,16 @@ public class PanelCtrl : MonoBehaviour {
         {
             go.SetActive(false);
         }
+
+        Canvas[] canvases = Resources.FindObjectsOfTypeAll<Canvas>(); 
+        foreach(Canvas c in canvases)
+        {
+            if (c.name == "SimpleFileBrowserCanvas(Clone)")
+            {
+                CanvasScaler cScaler = c.GetComponent<CanvasScaler>();
+                cScaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
+            }
+        }
     }
 
     public void ToglePanels(string panelName)

@@ -170,9 +170,23 @@ public class LrcFileCtrl : MonoBehaviour {
 
         string jsonToSave = JsonMapper.ToJson(song);
         jsonOutputTxt.text = jsonToSave;
-        File.WriteAllText(Application.persistentDataPath + "/" + song.artist + "_" + song.songname+".json", jsonToSave.ToString());
 
-        UIEventManager.FireAlert("File Saved to " + Application.persistentDataPath + "/" + song.artist + "_" + song.songname + ".json", "SUCCESS");
+        FileBrowser.SetDefaultFilter(".json");
+        StartCoroutine(ShowSaveDialogCoroutine(jsonToSave.ToString()));
+
+        //File.WriteAllText(Application.persistentDataPath + "/" + song.artist + "_" + song.songname+".json", jsonToSave.ToString());
+
+        //UIEventManager.FireAlert("File Saved to " + Application.persistentDataPath + "/" + song.artist + "_" + song.songname + ".json", "SUCCESS");
+    }
+
+    IEnumerator ShowSaveDialogCoroutine(string jsonToSaveString)
+    {
+        yield return FileBrowser.WaitForSaveDialog(false, null);
+        if (FileBrowser.Success)
+        {
+            File.WriteAllText(FileBrowser.Result, jsonToSaveString);
+            UIEventManager.FireAlert("Saved to: " + FileBrowser.Result, "SAVE SUCCESS");
+        }
     }
 
     // HELPERS
