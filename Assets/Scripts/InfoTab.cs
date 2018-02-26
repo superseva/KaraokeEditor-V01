@@ -35,18 +35,24 @@ public class InfoTab : MonoBehaviour {
 
     public void ApplyTextChange()
     {
+        if (!wordGO)
+            return;
         wordData.text = textField.text;
         timetrackCtrl.ChangeWordText(wordGO);
     }
 
     public void ApplyTimeChange()
     {
+        if (!wordGO)
+            return;
         wordData.time = timeField.text;
         timetrackCtrl.ChangeWordTime(wordGO);
     }
 
     public void Add10Ms()
     {
+        if (!wordGO)
+            return;
         float newTime = float.Parse(wordData.time) + 0.01f;
         wordData.time = newTime.ToString("F2");
         timetrackCtrl.ChangeWordTime(wordGO);
@@ -54,6 +60,8 @@ public class InfoTab : MonoBehaviour {
     }
     public void Sub10Ms()
     {
+        if (!wordGO)
+            return;
         if (float.Parse(wordData.time) > 0) { 
             float newTime = float.Parse(wordData.time) - 0.01f;
             wordData.time = newTime.ToString("F2");

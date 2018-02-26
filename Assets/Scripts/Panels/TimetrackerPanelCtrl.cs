@@ -23,6 +23,8 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
     public Image wordPrefabClickable;
     public GameObject wordsHolder;
     public Toggle halfSpeedToggle;
+    public InfoTab infoTab;
+    public Slider speedSlider;
     public int markerX = 100;
     public float songPitch = 1;
 
@@ -38,6 +40,8 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
     public int wavImageHeight = 250;
     public int secondsPerWavImage = 60;
 
+    private bool musicPaused = true;
+
     // Use this for initialization
     void Start ()
     {
@@ -47,6 +51,13 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         halfSpeedToggle.onValueChanged.AddListener(delegate {
             ToggleHalfSpeed(halfSpeedToggle);
         });
+        
+    }
+
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
     public void OpenJsonFileBrowser()
@@ -97,7 +108,7 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         }
     }
 
-    public void GenerateTrack()
+    public void OnGenerateTrackButton()
     {
         if (string.IsNullOrEmpty(songDataJsonString) || !audioSource.clip)
         {
@@ -107,6 +118,16 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
 
         // Clear the visual representatives for words and wav
         ResetTrack();
+        GenerateTrack();
+    }
+
+    public void GenerateTrack()
+    {
+        if (string.IsNullOrEmpty(songDataJsonString) || !audioSource.clip)
+        {
+            UIEventManager.FireAlert("NOT ALL FILES PRESENT", "ERROR");
+            return;
+        }
 
         songPixelSize = Mathf.CeilToInt(audioSource.clip.length * secondInPixels);
         int numOfChuncks = Mathf.CeilToInt(audioSource.clip.length / secondsPerWavImage);
@@ -146,7 +167,6 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
             wordButtonCls.label.text = wordButtonCls.wordData.text.ToString();
             wordGO.name = string.Format("{0}_{1}", songDataFromJson.wordsList[i].text, songDataFromJson.wordsList[i].time);
 
-
             //Instantiate(wordPrefab, wordsHolder.transform, false);
             //wordPrefab.text = songDataFromJson.wordsList[i].text.ToString();
             pozY = (150) + ((i % 3) * 20);
@@ -163,9 +183,11 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         if (!audioSource.clip)
             return;
 
+        musicPaused = false;
         audioSource.pitch = songPitch;
         audioSource.PlayScheduled(songCurrentTime);
-        StopAllCoroutines();
+        //StopAllCoroutines();
+        StopCoroutine(UpdateTrackPosition());
         StartCoroutine(UpdateTrackPosition());
     }
 
@@ -174,18 +196,42 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         if (!audioSource.clip)
             return;
 
+        musicPaused = false;
         audioSource.pitch = songPitch;
-        
         songCurrentTime = float.Parse(timer.text);
         audioSource.timeSamples = Mathf.CeilToInt(songCurrentTime * sampleRate);
         audioSource.PlayScheduled(songCurrentTime);
-        StopAllCoroutines();
+        //StopAllCoroutines();
+        StopCoroutine(UpdateTrackPosition());
         StartCoroutine(UpdateTrackPosition());
     }
 
     public void PauseSong()
     {
+        musicPaused = true;
         audioSource.Pause();
+    }
+
+    void ToggleHalfSpeed(Toggle change)
+    {
+        songPitch = (halfSpeedToggle.isOn) ? 0.5f : 1f;
+        speedSlider.value = (halfSpeedToggle.isOn) ? 50 : 100;
+        audioSource.pitch = songPitch;
+        // StartCoroutine(ChangeSongSpeed());
+    }
+
+    IEnumerator ChangeSongSpeed()
+    {
+        PauseSong();
+        yield return new WaitForSeconds(0.3f);
+        PlaySong();
+    }
+
+    public void OnSpeedSliderChange()
+    {
+        Debug.Log("change");
+        songPitch = speedSlider.value / 100;
+        audioSource.pitch = songPitch;
     }
 
     private int nextX = 0;
@@ -196,30 +242,72 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         // yield return null;
         while (audioSource.isPlaying)
         {
-            
-            songCurrentTime = (float)audioSource.timeSamples / sampleRate;
-            timer.text = songCurrentTime.ToString("F2");
-            songPercent = songCurrentTime / audioSource.clip.length;
-            nextX = Mathf.FloorToInt(0 - (songPixelSize * songPercent)) + markerX;
-            //wavImage.rectTransform.anchoredPosition = new Vector2(nextX, wavImage.rectTransform.anchoredPosition.y);
-            wavimagesPanel.transform.position = new Vector3(nextX, wavimagesPanel.transform.position.y, 0);
-            wordsHolder.transform.position = new Vector3(nextX, wordsHolder.transform.position.y, 0);
-
+            //songCurrentTime = (float)audioSource.timeSamples / sampleRate;
+            //timer.text = songCurrentTime.ToString("F2");
+            //songPercent = songCurrentTime / audioSource.clip.length;
+            //nextX = Mathf.FloorToInt(0 - (songPixelSize * songPercent)) + markerX;
+            //wavimagesPanel.transform.position = new Vector3(nextX, wavimagesPanel.transform.position.y, 0);
+            //wordsHolder.transform.position = new Vector3(nextX, wordsHolder.transform.position.y, 0);
+            SetTtrackPosition();
             yield return new WaitForSeconds(30 / 1000f);
-        }
+        }   
     }
 
-    void ResetFields()
+    public void Rewind1Sec()
     {
+        if (!audioSource.clip)
+            return;
+        audioSource.timeSamples = Mathf.Max(0, audioSource.timeSamples - (int)sampleRate);
+        SetTtrackPosition();
+    }
 
+    public void Forward1Sec()
+    {
+        if (!audioSource.clip)
+            return;
+        audioSource.timeSamples = Mathf.Min(audioSource.clip.samples, audioSource.timeSamples + (int)sampleRate);
+        SetTtrackPosition();
+    }
+
+    void SetTtrackPosition()
+    {
+        if (!audioSource.clip)
+            return;
+        songCurrentTime = (float)audioSource.timeSamples / sampleRate;
+        timer.text = songCurrentTime.ToString("F2");
+        songPercent = songCurrentTime / audioSource.clip.length;
+        nextX = Mathf.FloorToInt(0 - (songPixelSize * songPercent)) + markerX;
+        wavimagesPanel.transform.position = new Vector3(nextX, wavimagesPanel.transform.position.y, 0);
+        wordsHolder.transform.position = new Vector3(nextX, wordsHolder.transform.position.y, 0);
+    }
+
+    public void ZoomTrack(int newPixelSize = 100)
+    {
+        PauseSong();
+
+        secondInPixels = newPixelSize;
+        DestroyGraphics();
+        GenerateTrack();
+        SetTtrackPosition();
     }
 
     public void ResetTrack()
     {
+        //StopAllCoroutines();
         audioSource.Stop();
+        musicPaused = true;
+        nextX = 0;
         audioSource.timeSamples = 0;
         songCurrentTime = 0;
         timer.text = songCurrentTime.ToString("F2");
+        DestroyGraphics();
+
+        wavimagesPanel.transform.position = new Vector3(0, wavimagesPanel.transform.position.y, 0);
+        wordsHolder.transform.position = new Vector3(0, wordsHolder.transform.position.y, 0);
+    }
+
+    void DestroyGraphics()
+    {
         foreach (Transform child in wordsHolder.transform)
         {
             GameObject.Destroy(child.gameObject);
@@ -228,9 +316,6 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         {
             GameObject.Destroy(child.gameObject);
         }
-
-        wavimagesPanel.transform.position = new Vector3(0, wavimagesPanel.transform.position.y, 0);
-        wordsHolder.transform.position = new Vector3(0, wordsHolder.transform.position.y, 0);
     }
 
     public void ChangeWordTime(GameObject wordGO)
@@ -254,18 +339,7 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         wordGO.name = string.Format("{0}_{1}", wordGO.GetComponent<WordButton>().wordData.text, wordGO.GetComponent<WordButton>().wordData.time);
     }
 
-    void ToggleHalfSpeed(Toggle change)
-    {
-        songPitch = (halfSpeedToggle.isOn) ? 0.5f : 1f;
-        StartCoroutine(ChangeSongSpeed());
-    }
-
-    IEnumerator ChangeSongSpeed()
-    {
-        PauseSong();
-        yield return new WaitForSeconds(0.3f);
-        PlaySong();
-    }
+    
 
     // SAVING SONG
 
@@ -324,6 +398,49 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         return (bp < 0 && a.Length >= b.Length) ||
 
                 (ap < 0 && b.Length >= a.Length);
+    }
+    
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+
+            if (!audioSource.clip)
+                return;
+
+            if (!musicPaused)
+            {
+                PauseSong();
+                Debug.Log("Pause");
+            }
+            else
+            {
+                PlaySong();
+                Debug.Log("Play");
+            }
+        }
+
+        
+        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            Rewind1Sec();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Forward1Sec();
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            infoTab.Add10Ms();
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            infoTab.Sub10Ms();
+        }
+
     }
 
 
