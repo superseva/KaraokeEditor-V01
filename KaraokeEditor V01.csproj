@@ -321,6 +321,8 @@
     <Compile Include="Assets\Scripts\Helper\Texture2DHelper.cs" />
     <Compile Include="Assets\Scripts\InfoTab.cs" />
     <Compile Include="Assets\Scripts\Panels\AudioDrawer.cs" />
+    <Compile Include="Assets\Scripts\Panels\LevelPanelCtrl.cs" />
+    <Compile Include="Assets\Scripts\Panels\LineDistributer.cs" />
     <Compile Include="Assets\Scripts\Panels\LrcFileCtrl.cs" />
     <Compile Include="Assets\Scripts\Panels\PanelCtrl.cs" />
     <Compile Include="Assets\Scripts\Panels\TimetrackerPanelCtrl.cs" />
@@ -328,6 +330,7 @@
     <Compile Include="Assets\Scripts\UIEventManager.cs" />
     <Compile Include="Assets\Scripts\WordButton.cs" />
     <Compile Include="Assets\Scripts\WordData.cs" />
+    <Compile Include="Assets\Scripts\WordInTrack.cs" />
     <Compile Include="Assets\UnityLitJson\Extensions.cs" />
     <Compile Include="Assets\UnityLitJson\IJsonWrapper.cs" />
     <Compile Include="Assets\UnityLitJson\JsonAttribute.cs" />
