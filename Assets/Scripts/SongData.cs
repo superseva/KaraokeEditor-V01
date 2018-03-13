@@ -10,6 +10,7 @@ public class SongData
     public int bpm;
     public string artist;
     public WordData[] wordsList;
+    public float mp3dealy = 0;
     //public string[] words;
     //public string[] timestamps;
 }

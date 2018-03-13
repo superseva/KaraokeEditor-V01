@@ -29,6 +29,7 @@ public class LrcFileCtrl : MonoBehaviour {
     public InputField songNameTxt;
     public InputField songArtist;
     public InputField songBPMTxt;
+    public InputField InputMP3Delay;
 
     // Use this for initialization
     void Start()

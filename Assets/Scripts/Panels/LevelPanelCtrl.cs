@@ -64,6 +64,12 @@ public class LevelPanelCtrl : MonoBehaviour {
         }
     }
 
+    void OnDisable()
+    {
+        DestroyTrackLines();
+        jsonPathText.text = String.Empty;
+    }
+
     void DestroyTrackLines()
     {
         foreach (Transform child in contentBox.transform)
@@ -112,6 +118,16 @@ public class LevelPanelCtrl : MonoBehaviour {
 
             lastIndex = songDataFromJson.wordsList[i].index;
             //songDataFromJson.wordsList[i].index = Mathf.FloorToInt(UnityEngine.Random.Range(1, 3.9f));
+        }
+        GenerateTextLines();
+    }
+
+    public void RandomizeRepeat()
+    {
+        int wordsCount = songDataFromJson.wordsList.Length;
+        for (int i = 0; i < wordsCount; i++)
+        {
+            songDataFromJson.wordsList[i].index = Mathf.FloorToInt(UnityEngine.Random.Range(1, 3.9f));
         }
         GenerateTextLines();
     }
