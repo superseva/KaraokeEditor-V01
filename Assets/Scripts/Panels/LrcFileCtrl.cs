@@ -125,11 +125,15 @@ public class LrcFileCtrl : MonoBehaviour {
         //}
 
         WordData word;
+        string clearedStr;
+        string trimedStr;
         wordsList = new WordData[matchWords.Count];
         for(i=0; i<w; i++)
         {
             word = new WordData();
-            word.text = matchWords[i].ToString().TrimStart(']', ' ').TrimEnd('[');
+            clearedStr = matchWords[i].ToString().TrimStart(']', ' ').TrimEnd('[');
+            trimedStr = clearedStr.TrimEnd();
+            word.text = trimedStr;
             word.time = formatTimeToSeconds(matchTimestamps[i].ToString());
             word.index = i;
             wordsList[i] = word;
@@ -164,6 +168,8 @@ public class LrcFileCtrl : MonoBehaviour {
         song.songname = songNameTxt.text;
         song.bpm = int.Parse(songBPMTxt.text);
         song.artist = songArtist.text;
+        song.mp3dealy = 0;
+        song.timeOnScreen = 1;
 
         //song.words = songWords;
         //song.timestamps = songTimestamps;

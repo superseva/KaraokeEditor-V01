@@ -18,6 +18,7 @@ public class LevelPanelCtrl : MonoBehaviour {
     public Text wavPathText;
     public GameObject contentBox;
     public GameObject wordLinePrefab;
+    public InputField speedField;
 
     private string songDataJsonString;
     private AudioSource audioSource;
@@ -106,6 +107,13 @@ public class LevelPanelCtrl : MonoBehaviour {
         }
         contentHeight += 80;
         contentBox.GetComponent<RectTransform>().sizeDelta = new Vector2(0, contentHeight);
+
+
+        if (songDataFromJson.timeOnScreen.Equals(null))
+        {
+            songDataFromJson.timeOnScreen = 1;
+        }
+        speedField.text = songDataFromJson.timeOnScreen.ToString();
     }
 
     public void RandomizeNoRepeat()
@@ -146,9 +154,12 @@ public class LevelPanelCtrl : MonoBehaviour {
     }
 
     public void PreviewSong()
-    {   
-        if(songDataFromJson!=null && audioSource.clip!=null)
-            songPlayer.PreviewSong(audioSource, songDataFromJson);
+    {
+
+        
+
+        if (songDataFromJson!=null && audioSource.clip!=null)
+            songPlayer.PreviewSong(audioSource, songDataFromJson, float.Parse(speedField.text));
         else
             UIEventManager.FireAlert("Load JSON and WAV!", "ERROR");
     }
@@ -180,6 +191,7 @@ public class LevelPanelCtrl : MonoBehaviour {
         //Debug.Log(FileBrowser.Success + " " + FileBrowser.Result);
         if (FileBrowser.Success)
         {
+            songDataFromJson.timeOnScreen = float.Parse(speedField.text);
             string jsonToSave = JsonMapper.ToJson(songDataFromJson);
             //jsonOutputTxt.text = jsonToSave;
             string pathToSave = (IsStringEndsWith(FileBrowser.Result, ".json")) ? FileBrowser.Result : FileBrowser.Result + ".json";
