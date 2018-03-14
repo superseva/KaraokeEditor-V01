@@ -325,6 +325,7 @@
     <Compile Include="Assets\Scripts\Panels\LineDistributer.cs" />
     <Compile Include="Assets\Scripts\Panels\LrcFileCtrl.cs" />
     <Compile Include="Assets\Scripts\Panels\PanelCtrl.cs" />
+    <Compile Include="Assets\Scripts\Panels\PreviewPlayer.cs" />
     <Compile Include="Assets\Scripts\Panels\TimetrackerPanelCtrl.cs" />
     <Compile Include="Assets\Scripts\SongData.cs" />
     <Compile Include="Assets\Scripts\UIEventManager.cs" />

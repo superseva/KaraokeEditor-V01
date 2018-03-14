@@ -20,16 +20,25 @@ public class LevelPanelCtrl : MonoBehaviour {
     public GameObject wordLinePrefab;
 
     private string songDataJsonString;
+    private AudioSource audioSource;
+    private PreviewPlayer songPlayer;
 
     // Use this for initialization
     void Start () {
-		
-	}
+        audioSource = gameObject.GetComponent<AudioSource>();
+        songPlayer = gameObject.GetComponent<PreviewPlayer>();
+    }
 
     public void OpenJsonFileBrowser()
     {
         FileBrowser.SetDefaultFilter(".json");
         StartCoroutine(ShowLoadDialogCoroutine("json"));
+    }
+
+    public void OpenSoundFileBrowser()
+    {
+        FileBrowser.SetDefaultFilter(".wav");
+        StartCoroutine(ShowLoadDialogCoroutine("sound"));
     }
 
     IEnumerator ShowLoadDialogCoroutine(string fileType)
@@ -58,8 +67,8 @@ public class LevelPanelCtrl : MonoBehaviour {
             }
             else if (fileType == "sound")
             {
-                //audioSource.clip = www.GetAudioClip(false, false);
-                //wavPathText.text = filePath;
+                audioSource.clip = www.GetAudioClip(false, false);
+                wavPathText.text = filePath;
             }
         }
     }
@@ -68,6 +77,10 @@ public class LevelPanelCtrl : MonoBehaviour {
     {
         DestroyTrackLines();
         jsonPathText.text = String.Empty;
+        wavPathText.text = String.Empty;
+        audioSource.clip = null;
+        songDataJsonString = null;
+        songDataJsonString = null;
     }
 
     void DestroyTrackLines()
@@ -130,6 +143,14 @@ public class LevelPanelCtrl : MonoBehaviour {
             songDataFromJson.wordsList[i].index = Mathf.FloorToInt(UnityEngine.Random.Range(1, 3.9f));
         }
         GenerateTextLines();
+    }
+
+    public void PreviewSong()
+    {   
+        if(songDataFromJson!=null && audioSource.clip!=null)
+            songPlayer.PreviewSong(audioSource, songDataFromJson);
+        else
+            UIEventManager.FireAlert("Load JSON and WAV!", "ERROR");
     }
 
     // SAVING SONG
