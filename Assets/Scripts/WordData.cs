@@ -8,5 +8,6 @@ public class WordData {
 
     public string text;
     public string time;
+    public double duration;
     public int index;
 }

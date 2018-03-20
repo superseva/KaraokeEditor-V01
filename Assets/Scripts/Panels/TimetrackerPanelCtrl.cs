@@ -11,6 +11,8 @@ using System.Text;
 
 public class TimetrackerPanelCtrl : MonoBehaviour {
 
+    public static int SECOND_IN_PIXELS = 100;
+
     [HideInInspector]
     public SongData songDataFromJson;
 
@@ -36,7 +38,7 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
     private int songPixelSize;
 
     //SONG VARS
-    public int secondInPixels = 100;
+    //public int secondInPixels = 100;
     public int wavImageHeight = 250;
     public int secondsPerWavImage = 60;
 
@@ -129,10 +131,12 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
             return;
         }
 
-        songPixelSize = Mathf.CeilToInt(audioSource.clip.length * secondInPixels);
+        //songPixelSize = Mathf.CeilToInt(audioSource.clip.length * secondInPixels);
+        songPixelSize = Mathf.CeilToInt(audioSource.clip.length * TimetrackerPanelCtrl.SECOND_IN_PIXELS);
         int numOfChuncks = Mathf.CeilToInt(audioSource.clip.length / secondsPerWavImage);
         int samplesInChunk = (int)sampleRate * secondsPerWavImage;
-        int chunkPixelSize = secondsPerWavImage * secondInPixels;
+        //int chunkPixelSize = secondsPerWavImage * secondInPixels;
+        int chunkPixelSize = secondsPerWavImage * TimetrackerPanelCtrl.SECOND_IN_PIXELS;
         int startSample = 0;
         int endSample = 0;
         RawImage wavImageGO;
@@ -140,7 +144,8 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         {
             startSample = samplesInChunk * c;
             endSample = Mathf.Min( samplesInChunk * (c + 1), audioSource.clip.samples);
-            chunkPixelSize = Mathf.FloorToInt((endSample - startSample) / (sampleRate / secondInPixels));
+            //chunkPixelSize = Mathf.FloorToInt((endSample - startSample) / (sampleRate / secondInPixels));
+            chunkPixelSize = Mathf.FloorToInt((endSample - startSample) / (sampleRate / TimetrackerPanelCtrl.SECOND_IN_PIXELS));
             wavImageGO = Instantiate(wavImagePrefab, wavimagesPanel.transform, false) as RawImage;
             wavImageGO.rectTransform.sizeDelta = new Vector2(chunkPixelSize, wavImageHeight);
             wavImageGO.texture = AudioDrawer.CreateAudioTexturePiece(audioSource.clip, chunkPixelSize, wavImageHeight, Color.grey, startSample, endSample);
@@ -158,21 +163,17 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
         WordButton wordButtonCls;
         for (int i = 0; i < numOfwords; i++)
         {
-            pozX = float.Parse(songDataFromJson.wordsList[i].time) * secondInPixels;
-            //Debug.Log(pozX);
+           // pozX = float.Parse(songDataFromJson.wordsList[i].time) * secondInPixels;
+            pozX = float.Parse(songDataFromJson.wordsList[i].time) * TimetrackerPanelCtrl.SECOND_IN_PIXELS;
             wordGO = Instantiate(wordPrefabClickable, wordsHolder.transform, false);
             btn = wordGO.transform.GetComponent<Button>();
             wordButtonCls = wordGO.transform.GetComponent<WordButton>();
-            wordButtonCls.wordData = songDataFromJson.wordsList[i];
-            wordButtonCls.label.text = wordButtonCls.wordData.text.ToString();
+            wordButtonCls.SetWordData(songDataFromJson.wordsList[i]);
+            wordButtonCls.SetDurrationMarker(TimetrackerPanelCtrl.SECOND_IN_PIXELS);
+            //wordButtonCls.wordData = songDataFromJson.wordsList[i];
+            //wordButtonCls.label.text = wordButtonCls.wordData.text.ToString();
             wordGO.name = string.Format("{0}_{1}", songDataFromJson.wordsList[i].text, songDataFromJson.wordsList[i].time);
-
-            //Instantiate(wordPrefab, wordsHolder.transform, false);
-            //wordPrefab.text = songDataFromJson.wordsList[i].text.ToString();
             pozY = (150) + ((i % 3) * 20);
-            //wordPrefab.rectTransform.anchoredPosition = new Vector3(pozX, pozY, 0);
-            //wordPrefab.tag = "word";
-
             wordGO.rectTransform.anchoredPosition = new Vector3(pozX, pozY, 0);
             wordGO.tag = "word";
         }
@@ -285,7 +286,8 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
     {
         PauseSong();
 
-        secondInPixels = newPixelSize;
+        TimetrackerPanelCtrl.SECOND_IN_PIXELS = newPixelSize;
+        //secondInPixels = newPixelSize;
         DestroyGraphics();
         GenerateTrack();
         SetTtrackPosition();
@@ -320,8 +322,8 @@ public class TimetrackerPanelCtrl : MonoBehaviour {
 
     public void ChangeWordTime(GameObject wordGO)
     {
-        Debug.Log("Parse time: " + float.Parse(wordGO.GetComponent<WordButton>().wordData.time) * secondInPixels);
-        float pozX = float.Parse(wordGO.GetComponent<WordButton>().wordData.time) * secondInPixels;
+        Debug.Log("Parse time: " + float.Parse(wordGO.GetComponent<WordButton>().wordData.time) * TimetrackerPanelCtrl.SECOND_IN_PIXELS);
+        float pozX = float.Parse(wordGO.GetComponent<WordButton>().wordData.time) * TimetrackerPanelCtrl.SECOND_IN_PIXELS;
         float pozY = wordGO.GetComponent<Image>().rectTransform.anchoredPosition.y;
         wordGO.GetComponent<Image>().rectTransform.anchoredPosition = new Vector3(pozX, pozY, 0);
         //wordGO.transform.position = new Vector3(pozX, wordGO.transform.position.y, 0);
